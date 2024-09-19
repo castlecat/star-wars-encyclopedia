@@ -1,6 +1,9 @@
 "use client";
+import { useState, useEffect } from "react";
 import { gql, useQuery } from "@apollo/client";
-import Link from "next/link";
+import SearchBar from "../components/SearchBar";
+import SortOptions from "../components/SortOptions";
+import CharacterCard from "../components/CharacterCard";
 
 const GET_CHARACTERS = gql`
   query {
@@ -18,22 +21,46 @@ const GET_CHARACTERS = gql`
 
 const CharacterList = () => {
   const { loading, error, data } = useQuery(GET_CHARACTERS);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredCharacters, setFilteredCharacters] = useState([]);
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  useEffect(() => {
+    if (data) {
+      setFilteredCharacters(data.allPeople.people);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      const results = data.allPeople.people.filter((character: any) =>
+        character.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredCharacters(results);
+    }
+  }, [searchTerm, data]);
+
+  const sortedCharacters = filteredCharacters.sort((a: any, b: any) => {
+    if (sortOrder === "asc") {
+      return a.name.localeCompare(b.name);
+    } else {
+      return b.name.localeCompare(a.name);
+    }
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {data.allPeople.people.map((character: any) => (
-        <div key={character.id} className="p-4 border rounded shadow-md">
-          <h2 className="text-xl font-bold">
-            <Link href={`/characters/${character.id}`}>{character.name}</Link>
-          </h2>
-          <p>Height: {character.height}</p>
-          <p>Mass: {character.mass}</p>
-          <p>Gender: {character.gender}</p>
-        </div>
-      ))}
+    <div className="container mx-auto">
+      <SearchBar onSearch={setSearchTerm} />
+      <SortOptions sortOrder={sortOrder} setSortOrder={setSortOrder} />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sortedCharacters.map((character: any) => (
+          <CharacterCard key={character.id} character={character} />
+        ))}
+      </div>
     </div>
   );
 };

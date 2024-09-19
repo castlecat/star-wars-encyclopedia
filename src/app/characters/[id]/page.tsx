@@ -25,6 +25,7 @@ const GET_CHARACTER = gql`
       }
       filmConnection {
         films {
+          id
           title
         }
       }
@@ -34,11 +35,11 @@ const GET_CHARACTER = gql`
 
 const CharacterDetails = () => {
   const pathname = usePathname();
-  const id = pathname.split("/characters/")[1]; // Use the router to access the ID from the URL
+  const id = pathname.split("/characters/")[1];
 
   const { loading, error, data } = useQuery(GET_CHARACTER, {
     variables: { id },
-    skip: !id, // Skip query if ID is not available yet
+    skip: !id,
   });
 
   console.log("Character ID:", id);
@@ -50,51 +51,89 @@ const CharacterDetails = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-4">{character.name}</h1>
-      <div className="mb-4">
-        <p>
-          <strong>Birth Year:</strong> {character.birthYear}
-        </p>
-        <p>
-          <strong>Height:</strong> {character.height}
-        </p>
-        <p>
-          <strong>Mass:</strong> {character.mass}
-        </p>
-        <p>
-          <strong>Gender:</strong> {character.gender}
-        </p>
-        <p>
-          <strong>Hair Color:</strong> {character.hairColor}
-        </p>
-        <p>
-          <strong>Skin Color:</strong> {character.skinColor}
-        </p>
-        <p>
-          <strong>Eye Color:</strong> {character.eyeColor}
-        </p>
+      {character.name && (
+        <h1 className="text-4xl lg:text-6xl font-bold mb-4 lg:mb-8 ml-1 font-starjedi text-black sw-shadow">
+          {character.name}
+        </h1>
+      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {character.birthYear && (
+          <p>
+            <strong>Birth Year:</strong> {character.birthYear}
+          </p>
+        )}
+        {character.height && (
+          <p>
+            <strong>Height:</strong> {character.height}
+          </p>
+        )}
+        {character.mass && (
+          <p>
+            <strong>Mass:</strong> {character.mass}
+          </p>
+        )}
+        {character.gender && (
+          <p>
+            <strong>Gender:</strong> {character.gender}
+          </p>
+        )}
+        {character.hairColor && (
+          <p>
+            <strong>Hair Color:</strong> {character.hairColor}
+          </p>
+        )}
+        {character.skinColor && (
+          <p>
+            <strong>Skin Color:</strong> {character.skinColor}
+          </p>
+        )}
+        {character.eyeColor && (
+          <p>
+            <strong>Eye Color:</strong> {character.eyeColor}
+          </p>
+        )}
         {character.species && (
           <p>
             <strong>Species:</strong> {character.species.name}
           </p>
         )}
-        <p>
-          <strong>Homeworld:</strong>
-          <ul className="ml-4">
-            <li>Name: {character.homeworld.name}</li>
-            <li>Population: {character.homeworld.population}</li>
-            <li>Diameter: {character.homeworld.diameter}</li>
-            <li>Gravity: {character.homeworld.gravity}</li>
-          </ul>
-        </p>
-        <p>
-          <strong>Films:</strong>{" "}
-          {character.filmConnection.films
-            .map((film: any) => film.title)
-            .join(", ")}
-        </p>
       </div>
-      <Link href="/" className="mt-4 bg-blue-500 text-white p-2 rounded">
+      <hr className="my-4 lg:my-8 h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
+      <div className="mb-4 lg:mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        {character.homeworld && (
+          <p>
+            <strong>Homeworld:</strong>
+            <ul className="ml-4">
+              {character.homeworld.name && (
+                <li>Name: {character.homeworld.name}</li>
+              )}
+              {character.homeworld.population && (
+                <li>Population: {character.homeworld.population}</li>
+              )}
+              {character.homeworld.diameter && (
+                <li>Diameter: {character.homeworld.diameter}</li>
+              )}
+              {character.homeworld.gravity && (
+                <li>Gravity: {character.homeworld.gravity}</li>
+              )}
+            </ul>
+          </p>
+        )}
+        {character.filmConnection.films && (
+          <p>
+            <strong>Films:</strong>
+            <ul className="ml-4">
+              {character.filmConnection.films.map((film: any) => (
+                <li key={film.id}>{film.title}</li>
+              ))}
+            </ul>
+          </p>
+        )}
+      </div>
+      <Link
+        href="/"
+        className="bg-background border border-swyellow text-swyellow p-2 rounded-lg hover:opacity-70 transition-all ease-in-out delay-30 duration-150"
+      >
         Back to Character List
       </Link>
     </div>

@@ -5,6 +5,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --swyellow: #ffe81f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -24,4 +25,9 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.sw-shadow {
+  text-shadow: -1px -1px 0 var(--swyellow), 1px -1px 0 var(--swyellow),
+    -1px 1px 0 var(--swyellow), 1px 1px 0 var(--swyellow);
 }
