@@ -22,4 +22,4 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) for loading custom local fonts.
 
-This project uses the Star Wars GraphQL API (SWAPI). Viewing the API schema and testing graph querying can be performed [`here`](https://studio.apollographql.com/public/star-wars-swapi/variant/current/home)
+This project uses the Star Wars GraphQL API (SWAPI). Viewing the API schema and testing graph querying can be performed [`here`](https://studio.apollographql.com/public/star-wars-swapi/variant/current/home).
